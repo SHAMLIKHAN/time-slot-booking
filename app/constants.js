@@ -9,7 +9,8 @@ const Fields = {
     NAME: 'name',
     PASSWORD: 'password',
     STATUS: 'status',
-    UPDATED_AT: 'updated_at'
+    UPDATED_AT: 'updated_at',
+    USER_ID: 'user_id'
 };
 
 const Status = {

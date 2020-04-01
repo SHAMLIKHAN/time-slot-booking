@@ -54,7 +54,7 @@ function isString(item) {
 
 module.exports = {
     appendUserStatus: appendUserStatus,
-    FailureResponse: constructNokResponse,
+    failureResponse: constructNokResponse,
     generateRandomId: generateRandomId,
     hideMetaData: hideMetaData,
     successResponse: constructOkResponse
