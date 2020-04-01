@@ -24,6 +24,19 @@ async function loginUser(req, res) {
     }
 }
 
+async function logoutUser(req, res) {
+    logger.info(`POST /logout API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    try {
+        await service.logout(user);
+        const response = controller.successResponse({});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function registerUser(req, res) {
     logger.info(`POST /register API: Hit at ${(new Date()).getTime()}`);
     const body = req.body;
@@ -48,5 +61,6 @@ async function registerUser(req, res) {
 
 module.exports = {
     login: loginUser,
+    logout: logoutUser,
     register: registerUser
 };

@@ -32,7 +32,8 @@ function generateRandomId(obj) {
 
 function genreateToken(user) {
     const token = jwt.sign({
-        user,
+        email: user[Fields.EMAIL],
+        user_id: user[Fields.ID],
         iat: Math.floor(Date.now()/1000),
         exp: Math.floor(Date.now()/1000 + 2*60)
     }, Keys.SIGN);
@@ -62,11 +63,31 @@ function isString(item) {
     return typeof item === 'string';
 }
 
+function verifyToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+        const message = "Invalid token!";
+        const response = constructNokResponse(message, 401);
+        return res.json(response);
+    }
+    const token = authHeader.split(' ')[1];
+    try {
+        const user = jwt.verify(token, Keys.VERIFY);
+        req.user = user;
+        next();
+    } catch (err) {
+        const message = "Session expired! Login again!";
+        const response = constructNokResponse(message, 403);
+        return res.json(response);
+    }
+}
+
 module.exports = {
     appendUserStatus,
     failureResponse: constructNokResponse,
     generateRandomId,
     genreateToken,
     hideMetaData,
+    verifyToken,
     successResponse: constructOkResponse
 };
