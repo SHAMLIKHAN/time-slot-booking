@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
+const logger = require('./logger');
 
 const userRouter = require('./routes/user_router.js');
 const app = express();
@@ -18,5 +19,5 @@ app.use((req, res, next) => {
 
 app.use('/tsb/user', userRouter);
 
-console.log(`Server is listening on port ${config.PORT}`);
+logger.info(`TSB: Server is listening on port ${config.PORT}!`);
 app.listen(config.PORT);
