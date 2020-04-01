@@ -1,3 +1,7 @@
+const Collections = {
+    USERS: 'users'
+};
+
 const Fields = {
     _ID: '_id',
     EMAIL: 'email',
@@ -14,6 +18,7 @@ const Status = {
 };
 
 module.exports = {
+    Cols: Collections,
     Fields,
     Status
 };

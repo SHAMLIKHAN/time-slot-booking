@@ -15,6 +15,8 @@ async function registerUser(req, res) {
     try {
         controller.generateRandomId(body);
         controller.appendUserStatus(body);
+        const user = await service.register(body);
+        controller.hideMetaData(user);
         const response = controller.successResponse(body);
         res.json(response);
     } catch (err) {
