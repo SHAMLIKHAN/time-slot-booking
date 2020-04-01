@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
 
+const userRouter = require('./routes/user_router.js');
 const app = express();
 
 app.use(bodyParser.json());
@@ -15,11 +16,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/tsb', (req, res) => {
-    res.json({
-        message: "Welcome to TSB - Time Slot Booking!"
-    });
-});
+app.use('/tsb/user', userRouter);
 
 console.log(`Server is listening on port ${config.PORT}`);
 app.listen(config.PORT);
