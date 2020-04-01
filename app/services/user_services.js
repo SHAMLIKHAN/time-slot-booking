@@ -23,6 +23,29 @@ async function loginUserMongoDB(user) {
     }
 }
 
+async function logoutUserMongoDB(user) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.ID]: user[Fields.USER_ID],
+            [Fields.STATUS]: Status.ACTIVE
+        };
+        const set = {
+            [Fields.STATUS]: Status.INACTIVE,
+            [Fields.UPDATED_AT]: (new Date()).getTime()
+        };
+        const update = await db.collection(Cols.USERS)
+            .updateOne(query, { $set: set });
+            console.log(query, update.matchedCount)
+        if (update.matchedCount === 1) {
+            return await db.collection(Cols.USERS).findOne(query);
+        }
+        throw new Error('Authentication failed! User already logged out!');
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function registerUserMongoDB(user) {
     const db = await base.setupDatabase();
     const query = {
@@ -38,5 +61,6 @@ async function registerUserMongoDB(user) {
 
 module.exports = {
     login: loginUserMongoDB,
+    logout: logoutUserMongoDB,
     register: registerUserMongoDB
 };
