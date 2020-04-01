@@ -1,5 +1,27 @@
 const base = require('./db_conn');
-const { Cols, Fields } = require('../constants');
+const { Cols, Fields, Status } = require('../constants');
+
+async function loginUserMongoDB(user) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.ID]: user[Fields.USER_ID],
+            [Fields.PASSWORD]: user[Fields.PASSWORD]
+        };
+        const set = {
+            [Fields.STATUS]: Status.ACTIVE,
+            [Fields.UPDATED_AT]: (new Date()).getTime()
+        };
+        const update = await db.collection(Cols.USERS)
+            .updateOne(query, { $set: set });
+        if (update.matchedCount === 1) {
+            return await db.collection(Cols.USERS).findOne(query);
+        }
+        throw new Error('Authentication failed! Invalid User Id or Password!');
+    } catch (err) {
+        throw err;
+    }
+}
 
 async function registerUserMongoDB(user) {
     const db = await base.setupDatabase();
@@ -15,5 +37,6 @@ async function registerUserMongoDB(user) {
 }
 
 module.exports = {
+    login: loginUserMongoDB,
     register: registerUserMongoDB
 };

@@ -9,7 +9,13 @@ const Fields = {
     NAME: 'name',
     PASSWORD: 'password',
     STATUS: 'status',
-    UPDATED_AT: 'updated_at'
+    UPDATED_AT: 'updated_at',
+    USER_ID: 'user_id'
+};
+
+const Keys = {
+    SIGN: 'abcdefghijklmnopqrstuwxyz',
+    VERIFY: 'abcdefghijklmnopqrstuwxyz'
 };
 
 const Status = {
@@ -20,5 +26,6 @@ const Status = {
 module.exports = {
     Cols: Collections,
     Fields,
+    Keys,
     Status
 };

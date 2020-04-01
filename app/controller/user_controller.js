@@ -3,12 +3,33 @@ const validator = require('../validators/user_validator');
 const service = require('../services/user_services');
 const logger = require('../../logger');
 
+async function loginUser(req, res) {
+    logger.info(`POST /login API: Hit at ${(new Date()).getTime()}`);
+    const body = req.body;
+    const error = validator.validateLoginUser(body);
+    if (error) {
+        const response = controller.failureResponse(error, 200);
+        res.json(response);
+        return;
+    }
+    try {
+        const user = await service.login(body);
+        controller.hideMetaData(user);
+        controller.genreateToken(user);
+        const response = controller.successResponse(user);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function registerUser(req, res) {
     logger.info(`POST /register API: Hit at ${(new Date()).getTime()}`);
     const body = req.body;
     const error = validator.validateRegisterUser(body);
     if (error) {
-        const response = controller.FailureResponse(error, 200);
+        const response = controller.failureResponse(error, 200);
         res.json(response);
         return;
     }
@@ -20,11 +41,12 @@ async function registerUser(req, res) {
         const response = controller.successResponse(body);
         res.json(response);
     } catch (err) {
-        const response = controller.FailureResponse(err, 400);
+        const response = controller.failureResponse(err, 400);
         res.json(response);
     }
 }
 
 module.exports = {
+    login: loginUser,
     register: registerUser
 };

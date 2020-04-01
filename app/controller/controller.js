@@ -1,4 +1,5 @@
-const { Fields, Status } = require('../constants');
+const jwt = require('jsonwebtoken');
+const { Fields, Keys, Status } = require('../constants');
 
 function appendUserStatus(obj) {
     obj[Fields.STATUS] = Status.INACTIVE;
@@ -29,6 +30,15 @@ function generateRandomId(obj) {
     obj[Fields.ID] = randomId;
 }
 
+function genreateToken(user) {
+    const token = jwt.sign({
+        user,
+        iat: Math.floor(Date.now()/1000),
+        exp: Math.floor(Date.now()/1000 + 2*60)
+    }, Keys.SIGN);
+    user['access_token'] = token;
+}
+
 function getCurrentTime() {
     return (new Date()).getTime();
 }
@@ -53,9 +63,10 @@ function isString(item) {
 }
 
 module.exports = {
-    appendUserStatus: appendUserStatus,
-    FailureResponse: constructNokResponse,
-    generateRandomId: generateRandomId,
-    hideMetaData: hideMetaData,
+    appendUserStatus,
+    failureResponse: constructNokResponse,
+    generateRandomId,
+    genreateToken,
+    hideMetaData,
     successResponse: constructOkResponse
 };
