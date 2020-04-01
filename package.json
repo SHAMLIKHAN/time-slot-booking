@@ -1,0 +1,19 @@
+{
+  "name": "time-slot-booking",
+  "version": "1.0.0",
+  "description": "Time Slot Booking App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SHAMLIKHAN/time-slot-booking.git"
+  },
+  "author": "shamlikhan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SHAMLIKHAN/time-slot-booking/issues"
+  },
+  "homepage": "https://github.com/SHAMLIKHAN/time-slot-booking#readme"
+}
