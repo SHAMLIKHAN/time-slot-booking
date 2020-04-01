@@ -4,6 +4,7 @@ const service = require('../services/user_services');
 const logger = require('../../logger');
 
 async function loginUser(req, res) {
+    logger.info(`POST /login API: Hit at ${(new Date()).getTime()}`);
     const body = req.body;
     const error = validator.validateLoginUser(body);
     if (error) {
@@ -12,7 +13,9 @@ async function loginUser(req, res) {
         return;
     }
     try {
-        const response = controller.successResponse({});
+        const user = await service.login(body);
+        controller.hideMetaData(user);
+        const response = controller.successResponse(user);
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);
