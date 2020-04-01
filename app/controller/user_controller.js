@@ -15,6 +15,7 @@ async function loginUser(req, res) {
     try {
         const user = await service.login(body);
         controller.hideMetaData(user);
+        controller.genreateToken(user);
         const response = controller.successResponse(user);
         res.json(response);
     } catch (err) {

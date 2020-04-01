@@ -13,6 +13,11 @@ const Fields = {
     USER_ID: 'user_id'
 };
 
+const Keys = {
+    SIGN: 'abcdefghijklmnopqrstuwxyz',
+    VERIFY: 'abcdefghijklmnopqrstuwxyz'
+};
+
 const Status = {
     ACTIVE: 'active',
     INACTIVE: 'inactive'
@@ -21,5 +26,6 @@ const Status = {
 module.exports = {
     Cols: Collections,
     Fields,
+    Keys,
     Status
 };
