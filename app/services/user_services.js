@@ -90,6 +90,21 @@ async function getFreindsMongoDB(user) {
     }
 }
 
+async function getTimeslotsMongoDB(user) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.USER_ID]: user[Fields.USER_ID],
+            [Fields.TIME_FROM] : {
+                $gte: Date.now()
+            }
+        };
+        return await db.collection(Cols.TIMESLOTS).find(query).toArray();
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function loginUserMongoDB(user) {
     try {
         const db = await base.setupDatabase();
@@ -153,6 +168,7 @@ module.exports = {
     addTimeslot: addTimeslotMongoDB,
     deleteFriend: deleteFriendMongoDB,
     getFreinds: getFreindsMongoDB,
+    getTimeslots: getTimeslotsMongoDB,
     login: loginUserMongoDB,
     logout: logoutUserMongoDB,
     register: registerUserMongoDB
