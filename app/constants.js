@@ -5,6 +5,7 @@ const Collections = {
 const Fields = {
     _ID: '_id',
     EMAIL: 'email',
+    FRIENDS: 'friends',
     ID: 'id',
     NAME: 'name',
     PASSWORD: 'password',
