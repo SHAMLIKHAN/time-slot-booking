@@ -25,6 +25,20 @@ async function addFriend(req, res) {
     }
 }
 
+async function getFreinds(req, res) {
+    logger.info(`GET /user/friends API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    try {
+        const result = await service.getFreinds(user);
+        const friends = result[Fields.FRIENDS];
+        const response = controller.successResponse({friends});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function loginUser(req, res) {
     logger.info(`POST /login API: Hit at ${(new Date()).getTime()}`);
     const body = req.body;
@@ -82,6 +96,7 @@ async function registerUser(req, res) {
 }
 
 module.exports = {
+    getFreinds,
     login: loginUser,
     logout: logoutUser,
     postFreind: addFriend,
