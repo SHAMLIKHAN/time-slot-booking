@@ -32,6 +32,7 @@ async function addTimeslotMongoDB(user, timeslot) {
     try {
         const db = await base.setupDatabase();
         const query = {
+            [Fields.ID]: timeslot[Fields.ID],
             [Fields.USER_ID]: user[Fields.USER_ID],
             [Fields.TIME_FROM]: timeslot[Fields.TIME_FROM],
             [Fields.TIME_TO]: timeslot[Fields.TIME_TO],

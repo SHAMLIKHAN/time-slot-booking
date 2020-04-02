@@ -15,6 +15,7 @@ async function addAvailableTimeslot(req, res) {
         return;
     }
     try {
+        controller.generateRandomId(timeslot);
         controller.formatTimeslot(timeslot);
         const result = await service.addTimeslot(user, timeslot);
         controller.hideMetaData(result);
