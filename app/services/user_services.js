@@ -78,6 +78,26 @@ async function deleteFriendMongoDB(user, friendId) {
     }
 }
 
+async function deleteTimeslotMongoDB(user, timeslotId) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.USER_ID]: user[Fields.USER_ID],
+            [Fields.ID]: timeslotId,
+            [Fields.TIME_FROM]: {
+                $gte: Date.now()
+            }
+        };
+        const obj = await db.collection(Cols.TIMESLOTS).remove(query);
+        if (obj.result.n === 1) {
+            return;
+        }
+        throw new Error('Error deleting timeslot! Please try with valid timeslot_id!');
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function getFreindsMongoDB(user) {
     try {
         const db = await base.setupDatabase();
@@ -167,6 +187,7 @@ module.exports = {
     addFriend: addFriendMongoDB,
     addTimeslot: addTimeslotMongoDB,
     deleteFriend: deleteFriendMongoDB,
+    deleteTimeslot: deleteTimeslotMongoDB,
     getFreinds: getFreindsMongoDB,
     getTimeslots: getTimeslotsMongoDB,
     login: loginUserMongoDB,
