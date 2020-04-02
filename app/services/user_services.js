@@ -10,6 +10,13 @@ async function addFriendMongoDB(user, friend) {
         const push = {
             [Fields.FRIENDS]: friend[Fields.USER_ID]
         };
+        const result = await db.collection(Cols.USERS).find(query).project({[Fields.FRIENDS]: 1, [Fields._ID]: 0}).toArray();
+        const friends = result[0][Fields.FRIENDS];
+        friends.forEach(id => {
+            if (id == friend[Fields.USER_ID]) {
+                throw new Error('User is already your friend!');
+            }
+        });
         const update = await db.collection(Cols.USERS)
             .updateOne(query, { $push: push });
         if (update.matchedCount === 1) {
