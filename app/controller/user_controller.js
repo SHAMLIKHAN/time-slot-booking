@@ -62,6 +62,20 @@ async function deleteFriend(req, res) {
     }
 }
 
+async function deleteTimeslot(req, res) {
+    logger.info(`DELETE /user/timeslot/:timeslot_id API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const timeslotId = parseInt(req.param(Fields.TIMESLOT_ID));
+    try {
+        await service.deleteTimeslot(user, timeslotId);
+        const response = controller.successResponse({});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function getFreinds(req, res) {
     logger.info(`GET /user/friends API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -150,6 +164,7 @@ async function registerUser(req, res) {
 
 module.exports = {
     deleteFriend,
+    deleteTimeslot,
     getFreinds,
     getTimeslots,
     login: loginUser,
