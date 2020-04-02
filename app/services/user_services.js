@@ -1,6 +1,26 @@
 const base = require('./db_conn');
 const { Cols, Fields, Status } = require('../constants');
 
+async function addFriendMongoDB(user, friend) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.ID]: user[Fields.USER_ID]
+        };
+        const push = {
+            [Fields.FRIENDS]: friend[Fields.USER_ID]
+        };
+        const update = await db.collection(Cols.USERS)
+            .updateOne(query, { $push: push });
+        if (update.matchedCount === 1) {
+            return await db.collection(Cols.USERS).findOne(query);
+        }
+        throw new Error('Error adding friend! Please try with valid user_id!');
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function loginUserMongoDB(user) {
     try {
         const db = await base.setupDatabase();
@@ -60,6 +80,7 @@ async function registerUserMongoDB(user) {
 }
 
 module.exports = {
+    addFriend: addFriendMongoDB,
     login: loginUserMongoDB,
     logout: logoutUserMongoDB,
     register: registerUserMongoDB

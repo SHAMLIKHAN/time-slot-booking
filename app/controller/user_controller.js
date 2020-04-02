@@ -2,6 +2,7 @@ const controller = require('../controller/controller');
 const validator = require('../validators/user_validator');
 const service = require('../services/user_services');
 const logger = require('../../logger');
+const { Fields } = require('../constants');
 
 async function loginUser(req, res) {
     logger.info(`POST /login API: Hit at ${(new Date()).getTime()}`);
@@ -37,6 +38,27 @@ async function logoutUser(req, res) {
     }
 }
 
+async function addFriend(req, res) {
+    logger.info(`POST /user/friends API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const friend = req.body;
+    const error = validator.validateAddFriend(friend);
+    if (error) {
+        const response = controller.failureResponse(error, 200);
+        res.json(response);
+        return;
+    }
+    try {
+        const result = await service.addFriend(user, friend);
+        const friends = result[Fields.FRIENDS];
+        const response = controller.successResponse(friends);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function registerUser(req, res) {
     logger.info(`POST /register API: Hit at ${(new Date()).getTime()}`);
     const body = req.body;
@@ -62,5 +84,6 @@ async function registerUser(req, res) {
 module.exports = {
     login: loginUser,
     logout: logoutUser,
+    postFreind: addFriend,
     register: registerUser
 };
