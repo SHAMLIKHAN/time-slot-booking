@@ -85,6 +85,21 @@ async function deleteFriend(req, res) {
     }
 }
 
+async function deleteFreindTimeslot(req, res) {
+    logger.info(`DELETE /user/friend/:friend_id/timeslot/:timeslot_id API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const friendId = parseInt(req.param(Fields.FRIEND_ID));
+    const timeslotId = parseInt(req.param(Fields.TIMESLOT_ID));
+    try {
+        await service.deleteFriendTimeslot(user, friendId, timeslotId);
+        const response = controller.successResponse({});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function deleteTimeslot(req, res) {
     logger.info(`DELETE /user/timeslot/:timeslot_id API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -204,6 +219,7 @@ async function registerUser(req, res) {
 
 module.exports = {
     deleteFriend,
+    deleteFreindTimeslot,
     deleteTimeslot,
     getFreinds,
     getFreindTimeslots,
