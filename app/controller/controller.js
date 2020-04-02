@@ -23,10 +23,31 @@ function constructNokResponse(err, code) {
     };
 }
 
+function formatTime(timestamp) {
+    const dd = timestamp.getDate();
+    const mm = timestamp.getMonth()+1;
+    const yy = timestamp.getFullYear();
+    const date = `${dd}/${mm}/${yy}`;
+    const hours = timestamp.getHours();
+    const minutes = '00';
+    const seconds = '00';
+    const time = `${hours}:${minutes}:${seconds}`;
+    return {
+        [Fields.DATE]: date,
+        [Fields.TIME]: time
+    };
+}
+
 function formatTimeslot(timeslot) {
     const beginTime = new Date(timeslot[Fields.TIME_FROM]);
-    const beginHour = beginTime.getHours();
-    timeslot[Fields.SLOT_NO] = beginHour + 1;
+    const begin = formatTime(beginTime);
+    const endTime = new Date(timeslot[Fields.TIME_TO]);
+    const end = formatTime(endTime);
+    timeslot[Fields.BEGIN_DATE] = begin[Fields.DATE];
+    timeslot[Fields.BEGIN_TIME] = begin[Fields.TIME];
+    timeslot[Fields.END_DATE] = end[Fields.DATE];
+    timeslot[Fields.END_TIME] = end[Fields.TIME];
+    timeslot[Fields.SLOT_NO] = beginTime.getHours()+1;
 }
 
 function generateRandomId(obj) {

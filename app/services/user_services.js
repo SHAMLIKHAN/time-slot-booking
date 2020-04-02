@@ -35,6 +35,10 @@ async function addTimeslotMongoDB(user, timeslot) {
             [Fields.USER_ID]: user[Fields.USER_ID],
             [Fields.TIME_FROM]: timeslot[Fields.TIME_FROM],
             [Fields.TIME_TO]: timeslot[Fields.TIME_TO],
+            [Fields.BEGIN_DATE]: timeslot[Fields.BEGIN_DATE],
+            [Fields.BEGIN_TIME]: timeslot[Fields.BEGIN_TIME],
+            [Fields.END_DATE]: timeslot[Fields.END_DATE],
+            [Fields.END_TIME]: timeslot[Fields.END_TIME],
             [Fields.SLOT_NO]: timeslot[Fields.SLOT_NO],
             [Fields.STATUS]: Status.AVAILABLE
         };

@@ -17,6 +17,7 @@ async function addAvailableTimeslot(req, res) {
     try {
         controller.formatTimeslot(timeslot);
         const result = await service.addTimeslot(user, timeslot);
+        controller.hideMetaData(result);
         const response = controller.successResponse(result);
         res.json(response);
     } catch (err) {
