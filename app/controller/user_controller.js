@@ -4,6 +4,27 @@ const service = require('../services/user_services');
 const logger = require('../../logger');
 const { Fields } = require('../constants');
 
+async function addAvailableTimeslot(req, res) {
+    logger.info(`POST /user/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const timeslot = req.body;
+    const error = validator.validateAddTimeslot(timeslot);
+    if (error) {
+        const response = controller.failureResponse(error, 200);
+        res.json(response);
+        return;
+    }
+    try {
+        controller.formatTimeslot(timeslot);
+        const result = await service.addTimeslot(user, timeslot);
+        const response = controller.successResponse(result);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function addFriend(req, res) {
     logger.info(`POST /user/friends API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -115,5 +136,6 @@ module.exports = {
     login: loginUser,
     logout: logoutUser,
     postFreind: addFriend,
+    postTimeslot: addAvailableTimeslot,
     register: registerUser
 };

@@ -23,6 +23,12 @@ function constructNokResponse(err, code) {
     };
 }
 
+function formatTimeslot(timeslot) {
+    const beginTime = new Date(timeslot[Fields.TIME_FROM]);
+    const beginHour = beginTime.getHours();
+    timeslot[Fields.SLOT_NO] = beginHour + 1;
+}
+
 function generateRandomId(obj) {
     const min = 0;
     const max = 9999999;
@@ -85,6 +91,7 @@ function verifyToken(req, res, next) {
 module.exports = {
     appendUserStatus,
     failureResponse: constructNokResponse,
+    formatTimeslot,
     generateRandomId,
     genreateToken,
     hideMetaData,

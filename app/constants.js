@@ -1,4 +1,5 @@
 const Collections = {
+    TIMESLOTS: 'timeslots',
     USERS: 'users'
 };
 
@@ -10,7 +11,10 @@ const Fields = {
     ID: 'id',
     NAME: 'name',
     PASSWORD: 'password',
+    SLOT_NO: 'slot_no',
     STATUS: 'status',
+    TIME_FROM: 'time_from',
+    TIME_TO: 'time_to',
     UPDATED_AT: 'updated_at',
     USER_ID: 'user_id'
 };
@@ -21,7 +25,9 @@ const Keys = {
 };
 
 const Status = {
+    AVAILABLE: 'available',
     ACTIVE: 'active',
+    BOOKED: 'booked',
     INACTIVE: 'inactive'
 };
 

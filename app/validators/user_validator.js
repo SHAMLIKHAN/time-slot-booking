@@ -10,6 +10,27 @@ function validateAddFriend(friend) {
     return;
 }
 
+function validateAddTimeslot(timeslot) {
+    if (!timeslot) {
+        return 'timeslot details are not provided!';
+    }
+    if (!timeslot[Fields.TIME_FROM]) {
+        return 'time_from is not provided!';
+    }
+    if (!timeslot[Fields.TIME_TO]) {
+        return 'time_to is not provided!';
+    }
+    const beginTime = new Date(timeslot[Fields.TIME_FROM]);
+    const endTime = new Date(timeslot[Fields.TIME_TO]);
+    
+    if (beginTime > endTime) {
+        return 'time_from can not exceed time_to';
+    } else if (endTime - beginTime > 60*60*1000) {
+        return 'timeslots should not exceed one hour!'
+    }
+    return;
+}
+
 function validateLoginUser(user) {
     if (!user) {
         return 'user details are not provided!';
@@ -41,6 +62,7 @@ function validateRegisterUser(user) {
 
 module.exports = {
     validateAddFriend,
+    validateAddTimeslot,
     validateLoginUser,
     validateRegisterUser
 };

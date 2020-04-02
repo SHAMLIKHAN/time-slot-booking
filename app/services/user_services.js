@@ -28,6 +28,23 @@ async function addFriendMongoDB(user, friend) {
     }
 }
 
+async function addTimeslotMongoDB(user, timeslot) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.USER_ID]: user[Fields.USER_ID],
+            [Fields.TIME_FROM]: timeslot[Fields.TIME_FROM],
+            [Fields.TIME_TO]: timeslot[Fields.TIME_TO],
+            [Fields.SLOT_NO]: timeslot[Fields.SLOT_NO],
+            [Fields.STATUS]: Status.AVAILABLE
+        };
+        const result = await db.collection(Cols.TIMESLOTS).insertOne(query);
+        return result.ops[0];
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function deleteFriendMongoDB(user, friendId) {
     try {
         const db = await base.setupDatabase();
@@ -119,6 +136,7 @@ async function registerUserMongoDB(user) {
 
 module.exports = {
     addFriend: addFriendMongoDB,
+    addTimeslot: addTimeslotMongoDB,
     deleteFriend: deleteFriendMongoDB,
     getFreinds: getFreindsMongoDB,
     login: loginUserMongoDB,
