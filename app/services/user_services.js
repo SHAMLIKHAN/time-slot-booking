@@ -28,6 +28,18 @@ async function addFriendMongoDB(user, friend) {
     }
 }
 
+async function getFreindsMongoDB(user) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.ID]: user[Fields.USER_ID]
+        };
+        return await db.collection(Cols.USERS).findOne(query);
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function loginUserMongoDB(user) {
     try {
         const db = await base.setupDatabase();
@@ -88,6 +100,7 @@ async function registerUserMongoDB(user) {
 
 module.exports = {
     addFriend: addFriendMongoDB,
+    getFreinds: getFreindsMongoDB,
     login: loginUserMongoDB,
     logout: logoutUserMongoDB,
     register: registerUserMongoDB
