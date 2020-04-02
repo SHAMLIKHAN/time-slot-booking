@@ -20,9 +20,13 @@ function validateAddTimeslot(timeslot) {
     if (!timeslot[Fields.TIME_TO]) {
         return 'time_to is not provided!';
     }
+    const now = Date.now();
     const beginTime = new Date(timeslot[Fields.TIME_FROM]);
     const endTime = new Date(timeslot[Fields.TIME_TO]);
-    
+
+    if (beginTime < now) {
+        return 'time_from should be greater than current time!';
+    }
     if (beginTime > endTime) {
         return 'time_from can not exceed time_to';
     } else if (endTime - beginTime > 60*60*1000) {

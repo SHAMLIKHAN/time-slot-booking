@@ -42,6 +42,15 @@ async function addTimeslotMongoDB(user, timeslot) {
             [Fields.SLOT_NO]: timeslot[Fields.SLOT_NO],
             [Fields.STATUS]: Status.AVAILABLE
         };
+        const check = {
+            [Fields.USER_ID]: user[Fields.USER_ID],
+            [Fields.BEGIN_DATE]: timeslot[Fields.BEGIN_DATE],
+            [Fields.BEGIN_TIME]: timeslot[Fields.BEGIN_TIME]
+        };
+        const exists = await db.collection(Cols.TIMESLOTS).find(check).toArray();
+        if (exists.length) {
+            throw new Error('timeslot is occupied! Try another timeslot!');
+        }
         const result = await db.collection(Cols.TIMESLOTS).insertOne(query);
         return result.ops[0];
     } catch (err) {
