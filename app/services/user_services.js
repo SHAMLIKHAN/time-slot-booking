@@ -110,6 +110,36 @@ async function getFreindsMongoDB(user) {
     }
 }
 
+async function getFriendTimeslotsMongoDB(user, friendId) {
+    try {
+        const db = await base.setupDatabase();
+        const check = {
+            [Fields.ID]: user[Fields.USER_ID]
+        };
+        const result = await db.collection(Cols.USERS).find(check).project({[Fields.FRIENDS]: 1, [Fields._ID]: 0}).toArray();
+        const friends = result[0][Fields.FRIENDS];
+        let valid = false;
+        friends.forEach(id => {
+            if (id == friendId) {
+                valid = true;
+            }
+        });
+        if (!valid) {
+            throw new Error('friend_id is missing in your frieds list!');
+        }
+        const query = {
+            [Fields.USER_ID]: friendId,
+            [Fields.TIME_FROM]: {
+                $gte: Date.now()
+            },
+            [Fields.STATUS]: Status.AVAILABLE
+        };
+        return await db.collection(Cols.TIMESLOTS).find(query).toArray();
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function getTimeslotsMongoDB(user) {
     try {
         const db = await base.setupDatabase();
@@ -189,6 +219,7 @@ module.exports = {
     deleteFriend: deleteFriendMongoDB,
     deleteTimeslot: deleteTimeslotMongoDB,
     getFreinds: getFreindsMongoDB,
+    getFriendTimeslots: getFriendTimeslotsMongoDB,
     getTimeslots: getTimeslotsMongoDB,
     login: loginUserMongoDB,
     logout: logoutUserMongoDB,

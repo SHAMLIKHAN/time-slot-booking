@@ -90,6 +90,23 @@ async function getFreinds(req, res) {
     }
 }
 
+async function getFreindTimeslots(req, res) {
+    logger.info(`GET /user/friends/:friend_id/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const friendId = parseInt(req.param(Fields.FRIEND_ID));
+    try {
+        const timeslots = await service.getFriendTimeslots(user, friendId);
+        timeslots.forEach(element => {
+            controller.hideMetaData(element);
+        });
+        const response = controller.successResponse(timeslots);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function getTimeslots(req, res) {
     logger.info(`GET /user/timeslot API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -166,6 +183,7 @@ module.exports = {
     deleteFriend,
     deleteTimeslot,
     getFreinds,
+    getFreindTimeslots,
     getTimeslots,
     login: loginUser,
     logout: logoutUser,
