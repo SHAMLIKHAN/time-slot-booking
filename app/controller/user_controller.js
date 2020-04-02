@@ -4,6 +4,29 @@ const service = require('../services/user_services');
 const logger = require('../../logger');
 const { Fields } = require('../constants');
 
+async function addAvailableTimeslot(req, res) {
+    logger.info(`POST /user/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const timeslot = req.body;
+    const error = validator.validateAddTimeslot(timeslot);
+    if (error) {
+        const response = controller.failureResponse(error, 200);
+        res.json(response);
+        return;
+    }
+    try {
+        controller.generateRandomId(timeslot);
+        controller.formatTimeslot(timeslot);
+        const result = await service.addTimeslot(user, timeslot);
+        controller.hideMetaData(result);
+        const response = controller.successResponse(result);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function addFriend(req, res) {
     logger.info(`POST /user/friends API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -39,6 +62,20 @@ async function deleteFriend(req, res) {
     }
 }
 
+async function deleteTimeslot(req, res) {
+    logger.info(`DELETE /user/timeslot/:timeslot_id API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const timeslotId = parseInt(req.param(Fields.TIMESLOT_ID));
+    try {
+        await service.deleteTimeslot(user, timeslotId);
+        const response = controller.successResponse({});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function getFreinds(req, res) {
     logger.info(`GET /user/friends API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -46,6 +83,22 @@ async function getFreinds(req, res) {
         const result = await service.getFreinds(user);
         const friends = result[Fields.FRIENDS];
         const response = controller.successResponse({friends});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
+async function getTimeslots(req, res) {
+    logger.info(`GET /user/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    try {
+        const timeslots = await service.getTimeslots(user);
+        timeslots.forEach(element => {
+            controller.hideMetaData(element);
+        });
+        const response = controller.successResponse(timeslots);
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);
@@ -111,9 +164,12 @@ async function registerUser(req, res) {
 
 module.exports = {
     deleteFriend,
+    deleteTimeslot,
     getFreinds,
+    getTimeslots,
     login: loginUser,
     logout: logoutUser,
     postFreind: addFriend,
+    postTimeslot: addAvailableTimeslot,
     register: registerUser
 };
