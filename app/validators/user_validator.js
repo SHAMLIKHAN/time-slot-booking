@@ -35,6 +35,13 @@ function validateAddTimeslot(timeslot) {
     return;
 }
 
+function validateBookFriendTimeslot(obj) {
+    if (!obj || !obj[Fields.TIMESLOT_ID]) {
+        return 'timeslot_id is not provided!';
+    }
+    return;
+}
+
 function validateLoginUser(user) {
     if (!user) {
         return 'user details are not provided!';
@@ -67,6 +74,7 @@ function validateRegisterUser(user) {
 module.exports = {
     validateAddFriend,
     validateAddTimeslot,
+    validateBookFriendTimeslot,
     validateLoginUser,
     validateRegisterUser
 };

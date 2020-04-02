@@ -59,6 +59,45 @@ async function addTimeslotMongoDB(user, timeslot) {
     }
 }
 
+async function bookFriendTimeslotMongoDB(user, friendId, timeslotId) {
+    try {
+        const db = await base.setupDatabase();
+        const check = {
+            [Fields.ID]: user[Fields.USER_ID]
+        };
+        const result = await db.collection(Cols.USERS).find(check).project({[Fields.FRIENDS]: 1, [Fields._ID]: 0}).toArray();
+        const friends = result[0][Fields.FRIENDS];
+        let valid = false;
+        friends.forEach(id => {
+            if (id == friendId) {
+                valid = true;
+            }
+        });
+        if (!valid) {
+            throw new Error('friend_id is missing in your frieds list!');
+        }
+        const query = {
+            [Fields.ID]: timeslotId,
+            [Fields.USER_ID]: friendId,
+            [Fields.STATUS]: Status.AVAILABLE,
+            [Fields.TIME_FROM]: {
+                $gte: Date.now()
+            }
+        };
+        const set = {
+            [Fields.STATUS]: Status.BOOKED,
+            [Fields.BOOKED_BY]: user[Fields.USER_ID]
+        };
+        const update = await db.collection(Cols.TIMESLOTS).updateOne(query, { $set: set });
+        if (update.matchedCount === 1) {
+            return await db.collection(Cols.TIMESLOTS).findOne({[Fields.ID]: timeslotId});
+        }
+        throw new Error('invalid timeslot_id or unavailable timeslot_id!');
+    } catch (err) {
+        throw err;
+    }   
+}
+
 async function deleteFriendMongoDB(user, friendId) {
     try {
         const db = await base.setupDatabase();
@@ -216,6 +255,7 @@ async function registerUserMongoDB(user) {
 module.exports = {
     addFriend: addFriendMongoDB,
     addTimeslot: addTimeslotMongoDB,
+    bookFriendTimeslot: bookFriendTimeslotMongoDB,
     deleteFriend: deleteFriendMongoDB,
     deleteTimeslot: deleteTimeslotMongoDB,
     getFreinds: getFreindsMongoDB,
