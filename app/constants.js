@@ -7,6 +7,7 @@ const Fields = {
     _ID: '_id',
     BEGIN_DATE: 'begin_date',
     BEGIN_TIME: 'begin_time',
+    BOOKED_BY: 'booked_by',
     DATE: 'date',
     END_DATE: 'end_date',
     END_TIME: 'end_time',

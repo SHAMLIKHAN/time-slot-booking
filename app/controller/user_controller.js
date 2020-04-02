@@ -48,6 +48,29 @@ async function addFriend(req, res) {
     }
 }
 
+async function bookFriendTimeslot(req, res) {
+    logger.info(`POST /user/friend/:friend_id/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const body = req.body;
+    const friendId = parseInt(req.param(Fields.FRIEND_ID));
+    const error = validator.validateBookFriendTimeslot(body);
+    if (error) {
+        const response = controller.failureResponse(error, 200);
+        res.json(response);
+        return;
+    }
+    try {
+        const timeslotId = req.body[Fields.TIMESLOT_ID];
+        const result = await service.bookFriendTimeslot(user, friendId, timeslotId);
+        controller.hideMetaData(result);
+        const response = controller.successResponse(result);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function deleteFriend(req, res) {
     logger.info(`DELETE /user/friends/:friend_id API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -188,6 +211,7 @@ module.exports = {
     login: loginUser,
     logout: logoutUser,
     postFreind: addFriend,
+    postFreindTimeslot: bookFriendTimeslot,
     postTimeslot: addAvailableTimeslot,
     register: registerUser
 };
