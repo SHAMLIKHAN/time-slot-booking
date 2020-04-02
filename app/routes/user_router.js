@@ -12,6 +12,9 @@ router.delete('/friends/:friend_id', controller.verifyToken, userController.dele
 router.post('/timeslot', controller.verifyToken, userController.postTimeslot);
 router.get('/timeslot', controller.verifyToken, userController.getTimeslots);
 router.delete('/timeslot/:timeslot_id', controller.verifyToken, userController.deleteTimeslot);
+router.get('/friends/:friend_id/timeslot', controller.verifyToken, userController.getFreindTimeslots);
+router.post('/friends/:friend_id/timeslot', controller.verifyToken, userController.postFreindTimeslot);
+router.delete('/friends/:friend_id/timeslot/:timeslot_id', controller.verifyToken, userController.deleteFreindTimeslot);
 router.post('/logout', controller.verifyToken, userController.logout);
 
 module.exports = router;

@@ -48,12 +48,50 @@ async function addFriend(req, res) {
     }
 }
 
+async function bookFriendTimeslot(req, res) {
+    logger.info(`POST /user/friend/:friend_id/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const body = req.body;
+    const friendId = parseInt(req.param(Fields.FRIEND_ID));
+    const error = validator.validateBookFriendTimeslot(body);
+    if (error) {
+        const response = controller.failureResponse(error, 200);
+        res.json(response);
+        return;
+    }
+    try {
+        const timeslotId = req.body[Fields.TIMESLOT_ID];
+        const result = await service.bookFriendTimeslot(user, friendId, timeslotId);
+        controller.hideMetaData(result);
+        const response = controller.successResponse(result);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function deleteFriend(req, res) {
     logger.info(`DELETE /user/friends/:friend_id API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
     const friendId = parseInt(req.param(Fields.FRIEND_ID));
     try {
         await service.deleteFriend(user, friendId);
+        const response = controller.successResponse({});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
+async function deleteFreindTimeslot(req, res) {
+    logger.info(`DELETE /user/friend/:friend_id/timeslot/:timeslot_id API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const friendId = parseInt(req.param(Fields.FRIEND_ID));
+    const timeslotId = parseInt(req.param(Fields.TIMESLOT_ID));
+    try {
+        await service.deleteFriendTimeslot(user, friendId, timeslotId);
         const response = controller.successResponse({});
         res.json(response);
     } catch (err) {
@@ -83,6 +121,23 @@ async function getFreinds(req, res) {
         const result = await service.getFreinds(user);
         const friends = result[Fields.FRIENDS];
         const response = controller.successResponse({friends});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
+async function getFreindTimeslots(req, res) {
+    logger.info(`GET /user/friends/:friend_id/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const friendId = parseInt(req.param(Fields.FRIEND_ID));
+    try {
+        const timeslots = await service.getFriendTimeslots(user, friendId);
+        timeslots.forEach(element => {
+            controller.hideMetaData(element);
+        });
+        const response = controller.successResponse(timeslots);
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);
@@ -164,12 +219,15 @@ async function registerUser(req, res) {
 
 module.exports = {
     deleteFriend,
+    deleteFreindTimeslot,
     deleteTimeslot,
     getFreinds,
+    getFreindTimeslots,
     getTimeslots,
     login: loginUser,
     logout: logoutUser,
     postFreind: addFriend,
+    postFreindTimeslot: bookFriendTimeslot,
     postTimeslot: addAvailableTimeslot,
     register: registerUser
 };

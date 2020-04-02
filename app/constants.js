@@ -7,6 +7,7 @@ const Fields = {
     _ID: '_id',
     BEGIN_DATE: 'begin_date',
     BEGIN_TIME: 'begin_time',
+    BOOKED_BY: 'booked_by',
     DATE: 'date',
     END_DATE: 'end_date',
     END_TIME: 'end_time',
@@ -22,6 +23,7 @@ const Fields = {
     TIME_FROM: 'time_from',
     TIME_TO: 'time_to',
     TIMESLOT_ID: 'timeslot_id',
+    UNKNOWN: 'unknown',
     UPDATED_AT: 'updated_at',
     USER_ID: 'user_id'
 };
