@@ -25,6 +25,20 @@ async function addFriend(req, res) {
     }
 }
 
+async function deleteFriend(req, res) {
+    logger.info(`DELETE /user/friends/:friend_id API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    const friendId = parseInt(req.param(Fields.FRIEND_ID));
+    try {
+        await service.deleteFriend(user, friendId);
+        const response = controller.successResponse({});
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function getFreinds(req, res) {
     logger.info(`GET /user/friends API: Hit at ${(new Date()).getTime()}`);
     const user = req.user;
@@ -96,6 +110,7 @@ async function registerUser(req, res) {
 }
 
 module.exports = {
+    deleteFriend,
     getFreinds,
     login: loginUser,
     logout: logoutUser,
