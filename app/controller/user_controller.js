@@ -76,6 +76,22 @@ async function getFreinds(req, res) {
     }
 }
 
+async function getTimeslots(req, res) {
+    logger.info(`GET /user/timeslot API: Hit at ${(new Date()).getTime()}`);
+    const user = req.user;
+    try {
+        const timeslots = await service.getTimeslots(user);
+        timeslots.forEach(element => {
+            controller.hideMetaData(element);
+        });
+        const response = controller.successResponse(timeslots);
+        res.json(response);
+    } catch (err) {
+        const response = controller.failureResponse(err, 400);
+        res.json(response);
+    }
+}
+
 async function loginUser(req, res) {
     logger.info(`POST /login API: Hit at ${(new Date()).getTime()}`);
     const body = req.body;
@@ -135,6 +151,7 @@ async function registerUser(req, res) {
 module.exports = {
     deleteFriend,
     getFreinds,
+    getTimeslots,
     login: loginUser,
     logout: logoutUser,
     postFreind: addFriend,

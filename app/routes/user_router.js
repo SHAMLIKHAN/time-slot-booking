@@ -10,6 +10,7 @@ router.post('/friends', controller.verifyToken, userController.postFreind);
 router.get('/friends', controller.verifyToken, userController.getFreinds);
 router.delete('/friends/:friend_id', controller.verifyToken, userController.deleteFriend);
 router.post('/timeslot', controller.verifyToken, userController.postTimeslot);
+router.get('/timeslot', controller.verifyToken, userController.getTimeslots);
 router.post('/logout', controller.verifyToken, userController.logout);
 
 module.exports = router;
