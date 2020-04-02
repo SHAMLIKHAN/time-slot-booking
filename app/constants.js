@@ -23,6 +23,7 @@ const Fields = {
     TIME_FROM: 'time_from',
     TIME_TO: 'time_to',
     TIMESLOT_ID: 'timeslot_id',
+    UNKNOWN: 'unknown',
     UPDATED_AT: 'updated_at',
     USER_ID: 'user_id'
 };
