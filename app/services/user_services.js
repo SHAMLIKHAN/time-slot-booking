@@ -28,6 +28,25 @@ async function addFriendMongoDB(user, friend) {
     }
 }
 
+async function deleteFriendMongoDB(user, friendId) {
+    try {
+        const db = await base.setupDatabase();
+        const query = {
+            [Fields.ID]: user[Fields.USER_ID]
+        };
+        const pull = {
+            [Fields.FRIENDS]: friendId
+        };
+        const update = await db.collection(Cols.USERS).updateOne(query, { $pull: pull });
+        if (update.modifiedCount === 1) {
+            return;
+        }
+        throw new Error('Error deleting friend! Please try with valid friend_id!');
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function getFreindsMongoDB(user) {
     try {
         const db = await base.setupDatabase();
@@ -100,6 +119,7 @@ async function registerUserMongoDB(user) {
 
 module.exports = {
     addFriend: addFriendMongoDB,
+    deleteFriend: deleteFriendMongoDB,
     getFreinds: getFreindsMongoDB,
     login: loginUserMongoDB,
     logout: logoutUserMongoDB,
