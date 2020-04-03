@@ -4,25 +4,37 @@ const { Cols, Fields, Status } = require('../constants');
 async function addFriendMongoDB(user, friend) {
     try {
         const db = await base.setupDatabase();
+        if (user[Fields.USER_ID] == friend[Fields.FRIEND_ID]) {
+            throw new Error('Error adding friend! Please try with valid user_id.');
+        }
+        const check = {
+            [Fields.ID]: friend[Fields.FRIEND_ID]
+        };
+        const valid = await db.collection(Cols.USERS).find(check).toArray();
+        if (!valid.length) {
+            throw new Error('Error adding friend! Please try with valid user_id.');
+        }
         const query = {
             [Fields.ID]: user[Fields.USER_ID]
         };
         const push = {
-            [Fields.FRIENDS]: friend[Fields.USER_ID]
+            [Fields.FRIENDS]: friend[Fields.FRIEND_ID]
         };
-        const result = await db.collection(Cols.USERS).find(query).project({[Fields.FRIENDS]: 1, [Fields._ID]: 0}).toArray();
-        const friends = result[0][Fields.FRIENDS];
-        friends.forEach(id => {
-            if (id == friend[Fields.USER_ID]) {
-                throw new Error('User is already your friend!');
-            }
-        });
+        const result = await db.collection(Cols.USERS).findOne(query);
+        const friends = result[Fields.FRIENDS];
+        if (friends) {
+            friends.forEach(id => {
+                if (id == friend[Fields.FRIEND_ID]) {
+                    throw new Error('Error adding friend! user_id already exists in friend list.');
+                }
+            });
+        }
         const update = await db.collection(Cols.USERS)
             .updateOne(query, { $push: push });
         if (update.matchedCount === 1) {
             return await db.collection(Cols.USERS).findOne(query);
         }
-        throw new Error('Error adding friend! Please try with valid user_id!');
+        throw new Error('Error adding friend! Please try with valid user_id.');
     } catch (err) {
         throw err;
     }
@@ -50,7 +62,7 @@ async function addTimeslotMongoDB(user, timeslot) {
         };
         const exists = await db.collection(Cols.TIMESLOTS).find(check).toArray();
         if (exists.length) {
-            throw new Error('timeslot is occupied! Try another timeslot!');
+            throw new Error('timeslot is occupied! Try another timeslot.');
         }
         const result = await db.collection(Cols.TIMESLOTS).insertOne(query);
         return result.ops[0];
@@ -242,7 +254,7 @@ async function loginUserMongoDB(user) {
             [Fields.PASSWORD]: user[Fields.PASSWORD]
         };
         const set = {
-            [Fields.STATUS]: Status.ACTIVE,
+            [Fields.LOGIN_STATUS]: Status.ACTIVE,
             [Fields.UPDATED_AT]: (new Date()).getTime()
         };
         const update = await db.collection(Cols.USERS)
@@ -250,7 +262,7 @@ async function loginUserMongoDB(user) {
         if (update.matchedCount === 1) {
             return await db.collection(Cols.USERS).findOne(query);
         }
-        throw new Error('Authentication failed! Invalid User Id or Password!');
+        throw new Error('Authentication failed! Invalid user_id or password.');
     } catch (err) {
         throw err;
     }
@@ -286,7 +298,7 @@ async function registerUserMongoDB(user) {
     };
     const exist = await db.collection(Cols.USERS).find(query).toArray();
     if (exist.length) {
-        throw new Error('email already exists!');
+        throw new Error('email already exists');
     }
     const result = await db.collection(Cols.USERS).insertOne(user);
     return result.ops[0];

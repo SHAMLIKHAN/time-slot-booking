@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { Fields, Keys, Status } = require('../constants');
 
 function appendUserStatus(obj) {
-    obj[Fields.STATUS] = Status.INACTIVE;
+    obj[Fields.STATUS] = Status.ACTIVE;
     obj[Fields.UPDATED_AT] = getCurrentTime();
 }
 
@@ -57,14 +57,14 @@ function generateRandomId(obj) {
     obj[Fields.ID] = randomId;
 }
 
-function genreateToken(user) {
+function generateToken(user) {
     const token = jwt.sign({
         email: user[Fields.EMAIL],
         user_id: user[Fields.ID],
         iat: Math.floor(Date.now()/1000),
-        exp: Math.floor(Date.now()/1000 + 2*60)
+        exp: Math.floor(Date.now()/1000 + 10*60)
     }, Keys.SIGN);
-    user['access_token'] = token;
+    user[Fields.TOKEN] = token;
 }
 
 function getCurrentTime() {
@@ -72,18 +72,21 @@ function getCurrentTime() {
 }
 
 function hideMetaData(obj) {
-    if (obj[Fields._ID]) {
-        delete obj[Fields._ID];
-    }
-    if (obj[Fields.STATUS]) {
-        delete obj[Fields.STATUS];
-    }
-    if (obj[Fields.UPDATED_AT]) {
-        delete obj[Fields.UPDATED_AT];
-    }
-    if (obj[Fields.PASSWORD]) {
-        delete obj[Fields.PASSWORD];
-    }
+    const fields = [
+        Fields._ID, Fields.STATUS, Fields.UPDATED_AT, Fields.PASSWORD,
+        Fields.FRIENDS, Fields.LOGIN_STATUS, Fields.BOOKED_BY
+    ];
+    fields.forEach(field => {
+        if (obj[field]) {
+            if (field != Fields.BOOKED_BY) {
+                delete obj[field];
+            } else {
+                if (obj[Fields.BOOKED_BY] == Fields.UNKNOWN) {
+                    delete obj[field];
+                }
+            }
+        }
+    });
 }
 
 function isString(item) {
@@ -114,7 +117,7 @@ module.exports = {
     failureResponse: constructNokResponse,
     formatTimeslot,
     generateRandomId,
-    genreateToken,
+    generateToken,
     hideMetaData,
     verifyToken,
     successResponse: constructOkResponse

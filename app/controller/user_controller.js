@@ -40,7 +40,7 @@ async function addFriend(req, res) {
     try {
         const result = await service.addFriend(user, friend);
         const friends = result[Fields.FRIENDS];
-        const response = controller.successResponse(friends);
+        const response = controller.successResponse({friends});
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);
@@ -153,7 +153,7 @@ async function getTimeslots(req, res) {
         timeslots.forEach(element => {
             controller.hideMetaData(element);
         });
-        const response = controller.successResponse(timeslots);
+        const response = controller.successResponse({timeslots});
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);
@@ -173,7 +173,7 @@ async function loginUser(req, res) {
     try {
         const user = await service.login(body);
         controller.hideMetaData(user);
-        controller.genreateToken(user);
+        controller.generateToken(user);
         const response = controller.successResponse(user);
         res.json(response);
     } catch (err) {
@@ -209,7 +209,7 @@ async function registerUser(req, res) {
         controller.appendUserStatus(body);
         const user = await service.register(body);
         controller.hideMetaData(user);
-        const response = controller.successResponse(body);
+        const response = controller.successResponse(user);
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);
