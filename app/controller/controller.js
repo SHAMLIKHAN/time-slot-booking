@@ -57,12 +57,12 @@ function generateRandomId(obj) {
     obj[Fields.ID] = randomId;
 }
 
-function genreateToken(user) {
+function generateToken(user) {
     const token = jwt.sign({
         email: user[Fields.EMAIL],
         user_id: user[Fields.ID],
         iat: Math.floor(Date.now()/1000),
-        exp: Math.floor(Date.now()/1000 + 2*60)
+        exp: Math.floor(Date.now()/1000 + 10*60)
     }, Keys.SIGN);
     user['access_token'] = token;
 }
@@ -114,7 +114,7 @@ module.exports = {
     failureResponse: constructNokResponse,
     formatTimeslot,
     generateRandomId,
-    genreateToken,
+    generateToken,
     hideMetaData,
     verifyToken,
     successResponse: constructOkResponse
