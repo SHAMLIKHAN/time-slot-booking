@@ -74,11 +74,17 @@ function getCurrentTime() {
 function hideMetaData(obj) {
     const fields = [
         Fields._ID, Fields.STATUS, Fields.UPDATED_AT, Fields.PASSWORD,
-        Fields.FRIENDS, Fields.LOGIN_STATUS
+        Fields.FRIENDS, Fields.LOGIN_STATUS, Fields.BOOKED_BY
     ];
     fields.forEach(field => {
         if (obj[field]) {
-            delete obj[field];
+            if (field != Fields.BOOKED_BY) {
+                delete obj[field];
+            } else {
+                if (obj[Fields.BOOKED_BY] == Fields.UNKNOWN) {
+                    delete obj[field];
+                }
+            }
         }
     });
 }
