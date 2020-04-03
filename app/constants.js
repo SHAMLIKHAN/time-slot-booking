@@ -3,6 +3,12 @@ const Collections = {
     USERS: 'users'
 };
 
+const Environments = {
+    DEVELOPMENT: 'development',
+    PRODUCTION: 'production',
+    STAGING: 'staging'
+};
+
 const Fields = {
     _ID: '_id',
     BEGIN_DATE: 'begin_date',
@@ -44,6 +50,7 @@ const Status = {
 
 module.exports = {
     Cols: Collections,
+    Env: Environments,
     Fields,
     Keys,
     Status
