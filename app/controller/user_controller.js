@@ -209,7 +209,7 @@ async function registerUser(req, res) {
         controller.appendUserStatus(body);
         const user = await service.register(body);
         controller.hideMetaData(user);
-        const response = controller.successResponse(body);
+        const response = controller.successResponse(user);
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);

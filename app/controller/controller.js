@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { Fields, Keys, Status } = require('../constants');
 
 function appendUserStatus(obj) {
-    obj[Fields.STATUS] = Status.INACTIVE;
+    obj[Fields.STATUS] = Status.ACTIVE;
     obj[Fields.UPDATED_AT] = getCurrentTime();
 }
 
@@ -72,18 +72,15 @@ function getCurrentTime() {
 }
 
 function hideMetaData(obj) {
-    if (obj[Fields._ID]) {
-        delete obj[Fields._ID];
-    }
-    if (obj[Fields.STATUS]) {
-        delete obj[Fields.STATUS];
-    }
-    if (obj[Fields.UPDATED_AT]) {
-        delete obj[Fields.UPDATED_AT];
-    }
-    if (obj[Fields.PASSWORD]) {
-        delete obj[Fields.PASSWORD];
-    }
+    const fields = [
+        Fields._ID, Fields.STATUS, Fields.UPDATED_AT, Fields.PASSWORD,
+        Fields.FRIENDS
+    ];
+    fields.forEach(field => {
+        if (obj[field]) {
+            delete obj[field];
+        }
+    });
 }
 
 function isString(item) {
