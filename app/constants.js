@@ -15,6 +15,7 @@ const Fields = {
     FRIEND_ID: 'friend_id',
     FRIENDS: 'friends',
     ID: 'id',
+    LOGIN_STATUS: 'login_status',
     NAME: 'name',
     PASSWORD: 'password',
     SLOT_NO: 'slot_no',
@@ -23,6 +24,7 @@ const Fields = {
     TIME_FROM: 'time_from',
     TIME_TO: 'time_to',
     TIMESLOT_ID: 'timeslot_id',
+    TOKEN: 'token',
     UNKNOWN: 'unknown',
     UPDATED_AT: 'updated_at',
     USER_ID: 'user_id'

@@ -242,7 +242,7 @@ async function loginUserMongoDB(user) {
             [Fields.PASSWORD]: user[Fields.PASSWORD]
         };
         const set = {
-            [Fields.STATUS]: Status.ACTIVE,
+            [Fields.LOGIN_STATUS]: Status.ACTIVE,
             [Fields.UPDATED_AT]: (new Date()).getTime()
         };
         const update = await db.collection(Cols.USERS)
@@ -250,7 +250,7 @@ async function loginUserMongoDB(user) {
         if (update.matchedCount === 1) {
             return await db.collection(Cols.USERS).findOne(query);
         }
-        throw new Error('Authentication failed! Invalid User Id or Password!');
+        throw new Error('Authentication failed! Invalid user_id or password.');
     } catch (err) {
         throw err;
     }

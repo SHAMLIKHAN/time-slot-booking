@@ -64,7 +64,7 @@ function generateToken(user) {
         iat: Math.floor(Date.now()/1000),
         exp: Math.floor(Date.now()/1000 + 10*60)
     }, Keys.SIGN);
-    user['access_token'] = token;
+    user[Fields.TOKEN] = token;
 }
 
 function getCurrentTime() {
@@ -74,7 +74,7 @@ function getCurrentTime() {
 function hideMetaData(obj) {
     const fields = [
         Fields._ID, Fields.STATUS, Fields.UPDATED_AT, Fields.PASSWORD,
-        Fields.FRIENDS
+        Fields.FRIENDS, Fields.LOGIN_STATUS
     ];
     fields.forEach(field => {
         if (obj[field]) {
