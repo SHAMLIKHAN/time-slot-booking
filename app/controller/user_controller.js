@@ -40,7 +40,7 @@ async function addFriend(req, res) {
     try {
         const result = await service.addFriend(user, friend);
         const friends = result[Fields.FRIENDS];
-        const response = controller.successResponse(friends);
+        const response = controller.successResponse({friends});
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);

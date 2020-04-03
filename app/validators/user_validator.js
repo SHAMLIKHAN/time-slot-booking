@@ -1,11 +1,8 @@
 const { Fields } = require('../constants');
 
 function validateAddFriend(friend) {
-    if (!friend) {
-        return 'friend details are not provided!';
-    }
-    if (!friend[Fields.USER_ID]) {
-        return 'user_id is not provided!';
+    if (!friend[Fields.FRIEND_ID]) {
+        return 'friend_id is required.';
     }
     return;
 }

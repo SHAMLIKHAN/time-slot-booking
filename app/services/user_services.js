@@ -4,25 +4,37 @@ const { Cols, Fields, Status } = require('../constants');
 async function addFriendMongoDB(user, friend) {
     try {
         const db = await base.setupDatabase();
+        if (user[Fields.USER_ID] == friend[Fields.FRIEND_ID]) {
+            throw new Error('Error adding friend! Please try with valid user_id.');
+        }
+        const check = {
+            [Fields.ID]: friend[Fields.FRIEND_ID]
+        };
+        const valid = await db.collection(Cols.USERS).find(check).toArray();
+        if (!valid.length) {
+            throw new Error('Error adding friend! Please try with valid user_id.');
+        }
         const query = {
             [Fields.ID]: user[Fields.USER_ID]
         };
         const push = {
-            [Fields.FRIENDS]: friend[Fields.USER_ID]
+            [Fields.FRIENDS]: friend[Fields.FRIEND_ID]
         };
-        const result = await db.collection(Cols.USERS).find(query).project({[Fields.FRIENDS]: 1, [Fields._ID]: 0}).toArray();
-        const friends = result[0][Fields.FRIENDS];
-        friends.forEach(id => {
-            if (id == friend[Fields.USER_ID]) {
-                throw new Error('User is already your friend!');
-            }
-        });
+        const result = await db.collection(Cols.USERS).findOne(query);
+        const friends = result[Fields.FRIENDS];
+        if (friends) {
+            friends.forEach(id => {
+                if (id == friend[Fields.FRIEND_ID]) {
+                    throw new Error('Error adding friend! user_id already exists in friend list.');
+                }
+            });
+        }
         const update = await db.collection(Cols.USERS)
             .updateOne(query, { $push: push });
         if (update.matchedCount === 1) {
             return await db.collection(Cols.USERS).findOne(query);
         }
-        throw new Error('Error adding friend! Please try with valid user_id!');
+        throw new Error('Error adding friend! Please try with valid user_id.');
     } catch (err) {
         throw err;
     }
