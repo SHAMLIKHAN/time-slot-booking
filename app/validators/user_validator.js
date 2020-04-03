@@ -8,26 +8,21 @@ function validateAddFriend(friend) {
 }
 
 function validateAddTimeslot(timeslot) {
-    if (!timeslot) {
-        return 'timeslot details are not provided!';
-    }
     if (!timeslot[Fields.TIME_FROM]) {
-        return 'time_from is not provided!';
-    }
-    if (!timeslot[Fields.TIME_TO]) {
-        return 'time_to is not provided!';
+        return 'time_from is required.';
+    } else if (!timeslot[Fields.TIME_TO]) {
+        return 'time_to is required.';
     }
     const now = Date.now();
     const beginTime = new Date(timeslot[Fields.TIME_FROM]);
     const endTime = new Date(timeslot[Fields.TIME_TO]);
 
     if (beginTime < now) {
-        return 'time_from should be greater than current time!';
-    }
-    if (beginTime > endTime) {
-        return 'time_from can not exceed time_to';
+        return 'time_from should be greater than current time.';
+    } else if (beginTime > endTime) {
+        return 'time_from shoulde be less than time_to.';
     } else if (endTime - beginTime > 60*60*1000) {
-        return 'timeslots should not exceed one hour!'
+        return 'timeslot should be one hour long.'
     }
     return;
 }

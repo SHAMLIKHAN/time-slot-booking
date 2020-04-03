@@ -62,7 +62,7 @@ async function addTimeslotMongoDB(user, timeslot) {
         };
         const exists = await db.collection(Cols.TIMESLOTS).find(check).toArray();
         if (exists.length) {
-            throw new Error('timeslot is occupied! Try another timeslot!');
+            throw new Error('timeslot is occupied! Try another timeslot.');
         }
         const result = await db.collection(Cols.TIMESLOTS).insertOne(query);
         return result.ops[0];
