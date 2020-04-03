@@ -153,7 +153,7 @@ async function getTimeslots(req, res) {
         timeslots.forEach(element => {
             controller.hideMetaData(element);
         });
-        const response = controller.successResponse(timeslots);
+        const response = controller.successResponse({timeslots});
         res.json(response);
     } catch (err) {
         const response = controller.failureResponse(err, 400);
